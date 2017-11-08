@@ -1,4 +1,5 @@
 
+//whatDay returns an integer between 0 and 6 from a string "YEAR MONTH DAY"
 let week = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 var fs = require("fs");
 var dataInput = fs.readFileSync('js_practice/dates.txt', 'utf8');
@@ -16,7 +17,7 @@ function whatDay(line) {
     }
     let K = year%100;
     let J = floor(year/100);
-    let weekDay = (floor(2.6*month-5.39)  + floor(K/4) + floor(J/4) + day + K + (5*J))%7
+    let weekDay = (floor(2.6*month-5.39) + floor(K/4) + floor(J/4) + day + K + (5*J))%7
 
     return weekDay;
 }
