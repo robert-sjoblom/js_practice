@@ -110,7 +110,7 @@ var formattedEmployeeData = getFormattedEmployeeData(unformattedEmployeeData);
 
 function getHighestSalary(formattedEmployeeData) {
     var highestSalary = formattedEmployeeData[0];
-    for (var i = 1; i < formattedEmployeeData.length; i++) {
+    for (var i = 1; i < formattedEmployeeData.length; i++) { //start at 1, since 0 is already "checked"
         var employee = formattedEmployeeData[i];
         if (parseInt(highestSalary.salary) < parseInt(employee.salary)) {
             highestSalary = employee;
