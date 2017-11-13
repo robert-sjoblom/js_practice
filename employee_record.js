@@ -1,16 +1,43 @@
-
-
 var fs = require("fs");
-var dataInput = fs.readFileSync('js_practice/employee_records1.txt', 'utf8');
-//console.log(dataInput.split("\r\n"));
-
+var dataInput = fs.readFileSync('js_practice/employee_records.txt', 'utf8');
+//so it looks nice: 
+var currencyFormatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD", 
+    minimumFractionDigits: 2,
+});
 //store all lines in a list
 var recordList = dataInput.split("\r\n");
 
-var employee_data = [];
+//collect all employees in their own sublists
+function getUnformattedData(recordList) {
+    var unformattedEmployeeData = [];
+    for (var i = 0; i < recordList.length; i++) {
+        var line = recordList[i];
+        var templist = [];
+        if (line.slice(0, 1) != ":") {
+            //this must be an employee
+            templist.push(line);
+            for (var j = i + 1; j < recordList.length; j++) {
+                var element = recordList[j];
+                if (element.slice(0, 1) == ":") {
+                    templist.push(element);
+                    i = j;
+                } else {
+                    break;
+                }
+            }
+        }
+        //console.log("I run because I'm a line. My first value is " + line.slice(0, 1));
+        if (templist.length > 0) {
+            unformattedEmployeeData.push(templist);
+        } 
+    }
+    return unformattedEmployeeData; //list of lists
+}
 
+//returns a list = [age, dobYear, dobMonth, dobDay]
 function getDigitData(numbers) {
-    //returns a list = [age, dobYear, dobMonth, dobDay]
     let stringNum = numbers.toString();
     let age = stringNum.slice(0, 2);
     let dobYear = stringNum.slice(2, 4);
@@ -19,97 +46,77 @@ function getDigitData(numbers) {
     return [age, dobYear, dobMonth, dobDay];
 }
 
-console.log(recordList);
-
-function getEmployeeData(recordList) {
-
-    //return list = [[name-age-line, extensions], [name2, age2, extensions2]]
-    var employeeData = []
-    //go through list:
-    for (var i = 0; i < recordList.length; i++) {
-        var line = recordList[i];
-        let tempList = [] //this is the [name, age, extensions] list
-        //check if it's a person:
-        if (line.slice(0, 1) != ":") {
-            //if it's a person, add to tempList
-            tempList.push(line);
-            //check if next item is an extension or not
-            if (recordList[i+1].slice(0, 1) == ":") {
-                console.log("This shud be an ext line");
-                console.log(recordList[i+1]);
-            }
-        }
-    }
+//returns the salary
+function salaryParser(salaryLine) {
+    tmp = salaryLine.split(" ");
+    return parseFloat(tmp[1]).toFixed(0);
 }
 
-// function getEmployeeData(recordList) {
-//     //go through the list
-//     //and build objects for every person
-//     //return a list of objects
-//     let employeeList = []
+//returns an Employee Object
+function formattedEmployeeData(listItem) {
+    for (var i = 0; i < listItem.length; i++) {
+        //initializing vars
+        var line = listItem[i];
+        var salary;
+        var titleList = [];
+        var job;
+        //console.log(line)
+        if (i == 0) { //the first line always contains Name and DOB
+            var firstName = line.split(" ")[0];
+            var lastName = line.split(" ")[1];
+            var dob = getDigitData(line.split(" ")[line.split(" ").length-1]);
+        }
+        if (listItem.length > 1) {
+            if (line.search("SAL") != -1 ) {
+                salary = salaryParser(line);
+            } else if (line.search("JOB") != -1) {
+                job = line.split(" ")[1];
+            } else {
+                titleList.push(line);
+            }
+        }
+        if (salary === undefined) {
+            salary = 0;
+        }
+    }
+    let employee = new Object();
+    employee.firstName = firstName;
+    employee.lastName = lastName;
+    employee.DOB = dob[1] + "/" + dob[2] + "/" + dob[3];
+    if (job) {
+        employee.jobTitle = job;
+    }
+    if (titleList.length > 0) {
+        employee.titleList = titleList;
+    }
+    employee.salary = salary;
+    return employee;
+}
 
-//     for (var i = 0; i < recordList.length; i++) {
-//         var line = recordList[i];
-//         //this gets the name and DOB stuff
-//         if (line.slice(0, 1) != ":") {
-//             var j = line.split(" ");
-//             //we now have
-//             //[ 'Boyce', 'Calles', '', '', '', '', '', '', '', '83460319' ]
-//             //first two items are lastName firstName, last item is Age+DOB
-//             var lastName = j[0];
-//             var firstName = j[1];
-//             //feed dobData through getDigitData
-//             var dobData = getDigitData(j[j.length-1]);
-//             employeeList[i] = new Object();
-//             employeeList[i].name = lastName + " " + firstName;
-//             employeeList[i].age = dobData[0];
-//             employeeList[i].dobYear = dobData[1];
-//             employeeList[i].dobMonth = dobData[2];
-//             employeeList[i].dobDay = dobData[3];
-//         }
+//goes through an unformatted Employee Data list, returns a formatted one
+function getFormattedEmployeeData(unformattedEmployeeData) {
+    //takes a list of unformatted employee data, returns a list of
+    //formatted employee data.
+    var formattedEmployeeList = [];
+    for (var i = 0; i < unformattedEmployeeData.length; i++) {
+        var employee = unformattedEmployeeData[i];
+        formattedEmployeeList.push(formattedEmployeeData(employee));
+    }
+    return formattedEmployeeList;
+}
 
-//     }
-    
-    
-//     //console.log(employeeList);
-//     return employeeList;
-// }
+var unformattedEmployeeData = getUnformattedData(recordList);
+var formattedEmployeeData = getFormattedEmployeeData(unformattedEmployeeData);
 
-// //console.log(getDigitData(tempVal));
-// var templist = getEmployeeData(recordList);
-// console.log(templist);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// //check if line doesn't begin with :, in which case it's a name/DOB line
-// for (var i = 0; i < employee_list.length; i++) {
-//     var list_item = employee_list[i];
-//     //console.log(list_item);
-//     //test for :
-//     if (list_item.slice(0, 1) != ":") {
-//         //result: "Boyce Calles        83460319" string
-//         //we know the last 8 digits are age/dob
-//         //we know that records are always 28 long
-//         //because fixed length
-//         let age = list_item.slice(20, 22);
-//         let dobYear = list_item.slice(22, 24);
-//         let dobMonth = list_item.slice(24, 26);
-//         let dobDay = list_item.slice(26, 28);
-//         console.log(age, dobYear, dobMonth, dobDay);
-//         //console.log(list_item.split(" "));
-//     }
-// }
-
-
+function getHighestSalary(formattedEmployeeData) {
+    var highestSalary = formattedEmployeeData[0];
+    for (var i = 1; i < formattedEmployeeData.length; i++) {
+        var employee = formattedEmployeeData[i];
+        if (parseInt(highestSalary.salary) < parseInt(employee.salary)) {
+            highestSalary = employee;
+        }
+    }
+    let phrase = "Highest salary has: " + highestSalary.firstName + " " + highestSalary.lastName + "." + " Their salary is: " + currencyFormatter.format(highestSalary.salary);
+    return phrase;
+}
+console.log(getHighestSalary(formattedEmployeeData));
