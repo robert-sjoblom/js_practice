@@ -1,5 +1,5 @@
 var fs = require("fs");
-var dataInput = fs.readFileSync('js_practice/employee_records.txt', 'utf8');
+var dataInput = fs.readFileSync('js_practice/employee_records/employee_records.txt', 'utf8');
 //so it looks nice: 
 var currencyFormatter = new Intl.NumberFormat("en-US", {
     style: "currency",
