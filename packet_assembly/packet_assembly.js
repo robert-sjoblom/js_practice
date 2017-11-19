@@ -1,4 +1,4 @@
-var masterIndex = new Array();
+const masterIndex = new Array();
 function lineHandler(line) {
     let id = Number(line.slice(0, 4));
     let index = Number(line.slice(8, 10));
@@ -30,7 +30,7 @@ function builder(str) {
     pktAssembler(lineHandler(str));
 };
 
-//this is not so pretty.
+//this is not so pretty; it formats the output
 function printMsg(id) {
     var msg = masterIndex[id];
     var col1 = "    ";
