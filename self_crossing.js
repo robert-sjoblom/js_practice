@@ -16,4 +16,5 @@ var isSelfCrossing = function(x) {
 };
 console.log(isSelfCrossing(x));
 // Fails on:
-//  [1,1,2,1,1]
+// x =  [2, 4, 3, 7, 2, 2, 1, 1, 4]
+// x.slice(0, 7), x.slice(0+1, 7+1) till x.length()
