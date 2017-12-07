@@ -6,8 +6,8 @@ var dataInput = fs.readFileSync('js_practice/zeller_algorithm/dates.txt', 'utf8'
 var lines = dataInput.split("\n");
 
 function whatDay(line) {
-    floor = Math.floor;
-    date = line.split(" ")
+    const floor = Math.floor;
+    const date = line.split(" ");
     let year = Number(date[0]);
     let month = Number(date[1]);
     let day = Number(date[2]);

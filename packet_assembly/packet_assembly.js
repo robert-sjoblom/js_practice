@@ -51,14 +51,14 @@ function printMsg(id) {
     }
 }
 
-const readline = require('readline');
-const fs = require('fs');
+const readline = require("readline");
+const fs = require("fs");
 
 const rl = readline.createInterface({
-  input: fs.createReadStream('js_practice/packet_assembly/packets_assembly.txt'),
-  crlfDelay: Infinity
+    input: fs.createReadStream("js_practice/packet_assembly/packets_assembly.txt"),
+    crlfDelay: Infinity
 });
 
-rl.on('line', (line) => {
-  builder(line);
+rl.on("line", (line) => {
+    builder(line);
 });
