@@ -16,19 +16,19 @@ function pktAssembler(packet) {
         //check if msgList is complete:
         if (msgList.every(x => Boolean(x))) {
             printMsg(packet[0]);
-        };
+        }
     } else {
         //doesn't exist, build new one.
         let msgList = new Array(packet[2]).fill(false);
         msgList[packet[1]] = packet[3];
         masterIndex[packet[0]] = msgList;
-    };
+    }
 }
 
 function builder(str) {
     //builds messages
     pktAssembler(lineHandler(str));
-};
+}
 
 //this is not so pretty; it formats the output
 function printMsg(id) {
