@@ -1,4 +1,7 @@
 
+// Write a function that generates a baum-sweet sequence
+// from 0 to n.
+
 function baumTest(num) {
     // convert to binary
     let bin = num.toString(2);
@@ -13,5 +16,5 @@ function baumTest(num) {
     }
 }
 
-let baumArray = new Array(21).fill().map((e, i) => i++).forEach(x => baumTest(x));
+let baumArray = new Array(21).fill().map((e, i) => i++).map(x => baumTest(x));
 console.log(baumArray);
