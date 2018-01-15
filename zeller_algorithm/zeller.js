@@ -1,9 +1,9 @@
 
 //whatDay returns an integer between 0 and 6 from a string "YEAR MONTH DAY"
 let week = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-var fs = require("fs");
-var dataInput = fs.readFileSync('js_practice/zeller_algorithm/dates.txt', 'utf8');
-var lines = dataInput.split("\n");
+let fs = require("fs");
+let dataInput = fs.readFileSync('js_practice/zeller_algorithm/dates.txt', 'utf8');
+let lines = dataInput.split("\n");
 
 function whatDay(line) {
     floor = Math.floor;
