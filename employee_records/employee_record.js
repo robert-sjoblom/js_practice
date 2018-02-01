@@ -1,26 +1,26 @@
-var fs = require("fs");
-var dataInput = fs.readFileSync('js_practice/employee_records/employee_records.txt', 'utf8');
+const fs = require("fs");
+const dataInput = fs.readFileSync('js_practice/employee_records/employee_records.txt', 'utf8');
 //so it looks nice: 
-var currencyFormatter = new Intl.NumberFormat("en-US", {
+const currencyFormatter = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD", 
     minimumFractionDigits: 2,
 });
 //store all lines in a list
-var recordList = dataInput.split("\r\n");
+let recordList = dataInput.split("\r\n");
 
 //collect all employees in their own sublists
 function getUnformattedData(recordList) {
-    var unformattedEmployeeData = [];
-    for (var i = 0; i < recordList.length; i++) {
-        var line = recordList[i];
-        var templist = [];
-        if (line.slice(0, 1) != ":") {
+    let unformattedEmployeeData = [];
+    for (let i = 0; i < recordList.length; i++) {
+        let line = recordList[i];
+        let templist = [];
+        if (line.slice(0, 1) !== ":") {
             //this must be an employee
             templist.push(line);
-            for (var j = i + 1; j < recordList.length; j++) {
-                var element = recordList[j];
-                if (element.slice(0, 1) == ":") {
+            for (let j = i + 1; j < recordList.length; j++) {
+                let element = recordList[j];
+                if (element.slice(0, 1) === ":") {
                     templist.push(element);
                     i = j;
                 } else {
@@ -48,28 +48,28 @@ function getDigitData(numbers) {
 
 //returns the salary
 function salaryParser(salaryLine) {
-    tmp = salaryLine.split(" ");
+    let tmp = salaryLine.split(" ");
     return parseFloat(tmp[1]).toFixed(0);
 }
 
 //returns an Employee Object
 function formattedEmployeeData(listItem) {
-    for (var i = 0; i < listItem.length; i++) {
-        //initializing vars
-        var line = listItem[i];
-        var salary;
-        var titleList = [];
-        var job;
+    for (let i = 0; i < listItem.length; i++) {
+        //initializing lets
+        let line = listItem[i];
+        let salary;
+        let titleList = [];
+        let job;
         //console.log(line)
-        if (i == 0) { //the first line always contains Name and DOB
-            var firstName = line.split(" ")[0];
-            var lastName = line.split(" ")[1];
-            var dob = getDigitData(line.split(" ")[line.split(" ").length-1]);
+        if (i === 0) { //the first line always contains Name and DOB
+            let firstName = line.split(" ")[0];
+            let lastName = line.split(" ")[1];
+            let dob = getDigitData(line.split(" ")[line.split(" ").length-1]);
         }
         if (listItem.length > 1) {
-            if (line.search("SAL") != -1 ) {
+            if (line.search("SAL") !== -1 ) {
                 salary = salaryParser(line);
-            } else if (line.search("JOB") != -1) {
+            } else if (line.search("JOB") !== -1) {
                 job = line.split(" ")[1];
             } else {
                 titleList.push(line);
@@ -79,7 +79,7 @@ function formattedEmployeeData(listItem) {
             salary = 0;
         }
     }
-    let employee = new Object();
+    let employee = {};
     employee.firstName = firstName;
     employee.lastName = lastName;
     employee.DOB = dob[1] + "/" + dob[2] + "/" + dob[3];
@@ -97,26 +97,26 @@ function formattedEmployeeData(listItem) {
 function getFormattedEmployeeData(unformattedEmployeeData) {
     //takes a list of unformatted employee data, returns a list of
     //formatted employee data.
-    var formattedEmployeeList = [];
-    for (var i = 0; i < unformattedEmployeeData.length; i++) {
-        var employee = unformattedEmployeeData[i];
+    let formattedEmployeeList = [];
+    for (let i = 0; i < unformattedEmployeeData.length; i++) {
+        let employee = unformattedEmployeeData[i];
         formattedEmployeeList.push(formattedEmployeeData(employee));
     }
     return formattedEmployeeList;
 }
 
-var unformattedEmployeeData = getUnformattedData(recordList);
-var formattedEmployeeData = getFormattedEmployeeData(unformattedEmployeeData);
+let unformattedEmployeeData = getUnformattedData(recordList);
+let formattedEmployeeData = getFormattedEmployeeData(unformattedEmployeeData);
 
 function getHighestSalary(formattedEmployeeData) {
-    var highestSalary = formattedEmployeeData[0];
-    for (var i = 1; i < formattedEmployeeData.length; i++) { //start at 1, since 0 is already "checked"
-        var employee = formattedEmployeeData[i];
+    let highestSalary = formattedEmployeeData[0];
+    for (let i = 1; i < formattedEmployeeData.length; i++) { //start at 1, since 0 is already "checked"
+        let employee = formattedEmployeeData[i];
         if (parseInt(highestSalary.salary) < parseInt(employee.salary)) {
             highestSalary = employee;
         }
     }
-    let phrase = "Highest salary has: " + highestSalary.firstName + " " + highestSalary.lastName + "." + " Their salary is: " + currencyFormatter.format(highestSalary.salary);
-    return phrase;
+    return "Highest salary has: " + highestSalary.firstName + " " + highestSalary.lastName + "." + " Their salary is: " + currencyFormatter.format(highestSalary.salary);
+
 }
 console.log(getHighestSalary(formattedEmployeeData));
